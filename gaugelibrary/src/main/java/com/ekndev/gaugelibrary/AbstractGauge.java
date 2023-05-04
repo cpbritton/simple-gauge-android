@@ -29,6 +29,7 @@ abstract class AbstractGauge extends View {
 
 
     private List<Range> ranges = new ArrayList<>();
+    private String label = "Volts";
     private double value = 0;
     private double minValue = 0;
     private double maxValue = 100;
@@ -36,6 +37,7 @@ abstract class AbstractGauge extends View {
     private Paint gaugeBackGround;
     private int gaugeBGColor = Color.parseColor("#EAEAEA");
     private Paint textPaint;
+    private Paint labelPaint;
     private float rectTop = 0;
     private float rectLeft = 0;
     private float rectRight = 400;
@@ -45,6 +47,17 @@ abstract class AbstractGauge extends View {
     private boolean useRangeBGColor = false;
     private ValueFormatter formatter = new ValueFormatterImpl();
 
+
+    private float textSize = 100f;
+    private float labelTextSize = 20f;
+
+    public float getTextSize() {
+        return textSize;
+    }
+
+    public void setTextSize(float textSize) {
+        this.textSize = textSize;
+    }
 
     public AbstractGauge(Context context) {
         super(context);
@@ -275,6 +288,10 @@ abstract class AbstractGauge extends View {
         getTextPaint().setColor(color);
     }
 
+    public void setLabelColor(int color) {
+        getLabelPaint().setColor(color);
+    }
+
     /**
      * Get Current Value Color
      *
@@ -284,15 +301,30 @@ abstract class AbstractGauge extends View {
         return getTextPaint().getColor();
     }
 
+    public int getLabelColor() {
+        return getLabelPaint().getColor();
+    }
+
     protected Paint getTextPaint() {
         if (textPaint == null) {
             textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             textPaint.setColor(Color.BLACK);
             textPaint.setStyle(Paint.Style.FILL);
-            textPaint.setTextSize(25f);
+            textPaint.setTextSize(textSize);
             textPaint.setTextAlign(Paint.Align.CENTER);
         }
         return textPaint;
+    }
+
+    protected Paint getLabelPaint() {
+        if (labelPaint == null) {
+            labelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            labelPaint.setColor(Color.BLACK);
+            labelPaint.setStyle(Paint.Style.FILL);
+            labelPaint.setTextSize(labelTextSize);
+            labelPaint.setTextAlign(Paint.Align.CENTER);
+        }
+        return labelPaint;
     }
 
     public double getMinValue() {
@@ -329,6 +361,15 @@ abstract class AbstractGauge extends View {
 
     public void setValue(double value) {
         this.value = value;
+        invalidate();
+    }
+    public String getLabel() {
+        return label;
+    }
+
+
+    public void setLabel(String value) {
+        this.label = value;
         invalidate();
     }
 

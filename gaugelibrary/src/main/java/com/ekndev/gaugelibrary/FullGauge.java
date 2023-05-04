@@ -19,6 +19,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
 import java.util.List;
@@ -30,6 +31,8 @@ public class FullGauge extends AbstractGauge {
     private float gaugeBGWidth = 20f;
     private boolean displayValuePoint = false;
     protected boolean drawValueText = true;
+
+    public Drawable icon ;
 
 
     public FullGauge(Context context) {
@@ -72,6 +75,9 @@ public class FullGauge extends AbstractGauge {
 
         //drawText
         drawValueText(canvas);
+
+        //drawIcon
+        drawIcon(canvas);
 
         //draw value  point indicator
         drawValuePoint(canvas);
@@ -129,13 +135,33 @@ public class FullGauge extends AbstractGauge {
             canvas.translate((getWidth() / 2f) - ((getRectRight() / 2f) * getScaleRatio()), (getHeight() / 2f) - 220f * getScaleRatio());
             canvas.scale(getScaleRatio(), getScaleRatio());
             canvas.drawText(getFormattedValue() + "", 200f, 240f, getTextPaint());
+            canvas.drawText(getLabel() + "", 200f, 270f, getLabelPaint());
+            canvas.restore();
+        }
+    }
+
+    private void drawIcon(Canvas canvas) {
+        if (icon != null){
+            canvas.save();
+            canvas.translate((getWidth() / 2f) - ((getRectRight() / 2f) * getScaleRatio()), (getHeight() / 2f) - 220f * getScaleRatio());
+            canvas.scale(getScaleRatio(), getScaleRatio());
+            icon.setBounds(170, 80, 230, 140);
+            icon.draw(canvas);
             canvas.restore();
         }
     }
 
 
-    protected Paint getRangePaintForValue(double value, List<Range> ranges) {
+    public void setIcon(Drawable value) {
+        this.icon = value;
+        invalidate();
+    }
 
+    public Drawable getIcon() {
+        return icon;
+    }
+
+    protected Paint getRangePaintForValue(double value, List<Range> ranges) {
 
         Paint color = new Paint(Paint.ANTI_ALIAS_FLAG);
         color.setStrokeWidth(gaugeBGWidth);
